@@ -2,28 +2,52 @@ import cv2
 import glob
 import numpy as np
 import imageio
+import av
+import os
+from tqdm import tqdm
 
+os.makedirs('data/videos', exist_ok=True)
 feature_params = dict(maxCorners=100, qualityLevel=0.3, minDistance=7, blockSize=7)
 lk_params = dict(winSize=(15, 15), maxLevel=2, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-j = 0
-paths = sorted(glob.glob('/home/praveenvnktsh/warpsight/data/dji/5/*.png'))
-final_frames = []
-selected_indices = []
+video_path = '/home/praveenvnktsh/dev/slam_proj/warpsight/data/videos/schenley_p1.mp4'
+container = av.open(video_path)
+stream = container.streams.video[0]
+
+root = video_path.replace('videos/', "").replace('.mp4', '/')
+os.makedirs(root + 'frames', exist_ok=True)
+f = open(root + 'data.txt', 'w')
+
+frames_to_skip = 0
+cur_frame = None
+prev_frame = None
+
 image_idx = 0
-j = 1
-while j < len(paths):
-    path = paths[j]
-    cur_frame = cv2.imread(path, 0)
-    prev_frame = cv2.imread(paths[j - 1], 0)
+total_frames = int(stream.duration * stream.time_base * stream.framerate)
+downscale_ratio = 0.7
+pbar = tqdm(container.decode(video = 0), total=total_frames)
+for frame in pbar:
+    image_idx += 1
+    if frames_to_skip > 0:
+        frames_to_skip -= 1
+        prev_frame = np.array(frame.to_image())
+        prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+        prev_frame = cv2.resize(prev_frame, (0, 0), fx = downscale_ratio, fy = downscale_ratio)
+        continue
     
+    cur_frame = np.array(frame.to_image())
+    og_frame = cur_frame.copy()
+    cur_frame = cv2.cvtColor(cur_frame, cv2.COLOR_BGR2GRAY)
+    cur_frame = cv2.resize(cur_frame, (0, 0), fx = downscale_ratio, fy = downscale_ratio)
+    if prev_frame is None:
+        prev_frame = cur_frame
+        continue
     p0 = cv2.goodFeaturesToTrack(cur_frame, mask=None, **feature_params)
     p1, st, err = cv2.calcOpticalFlowPyrLK(prev_frame, cur_frame, p0, None, **lk_params)
     
     good_new = p1[st == 1]
     good_old = p0[st == 1]
     
-    selected_indices.append(j)
     viz_frame = prev_frame.copy()
     viz_frame = cv2.cvtColor(viz_frame, cv2.COLOR_GRAY2BGR)
     dists = []
@@ -46,16 +70,13 @@ while j < len(paths):
     frames_to_skip = int(240/frame_rate)
     frames_to_skip = min(max(1, frames_to_skip), 100)
     
-    j += frames_to_skip
-    print(j, np.mean(dists),)
-    final_frames.append(viz_frame)
+    timestamp = float(frame.pts * stream.time_base)
+    pbar.set_description("Skipping {} frames. Timestamp: {}".format(frames_to_skip, timestamp))
     
-    cv2.imwrite('outputs/{}.png'.format(str(image_idx).zfill(7)), viz_frame)
-    image_idx += 1
+    write_path = 'frames/' + str(image_idx).zfill(8) + '.jpg'
+    f.write(str(timestamp) + '\t' + write_path + '\n')
+    cv2.imwrite(root + write_path, og_frame[:, :, ::-1])
     cv2.imshow('Optical Flow', cv2.resize(viz_frame, (0, 0), fx = 0.5, fy = 0.5))
     if cv2.waitKey(1) == ord('q'):  # Press 'Esc' to exit
         break
-    j += 1
-import json
-with open('selected_indics.json', 'w') as f:
-    json.dump(selected_indices, f)
+f.close()
