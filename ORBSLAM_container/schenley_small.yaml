@@ -15,10 +15,12 @@ Camera.k3: -.0006011
 Camera.k4: .000579
 
 # Camera frames per second 
-Camera.fps: 30.0
+Camera.fps: 240.0
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 0
+Camera.width: 640
+Camera.height: 360
 
 #--------------------------------------------------------------------------------------------
 # ORB Parameters

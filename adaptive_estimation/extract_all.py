@@ -24,7 +24,7 @@ prev_frame = None
 
 image_idx = 0
 total_frames = int(stream.duration * stream.time_base * stream.framerate)
-downscale_ratio = 1
+downscale_ratio = 1/3
 
 stream = one(container.streams.video)
 ctx_gpu = av.Codec('hevc_cuvid', 'r').create()
@@ -34,17 +34,21 @@ image_idx = 0
 for packet in pbar:
     for frame in ctx_gpu.decode(packet):
         cur_frame = np.array(frame.to_image())[:, :, ::-1]
+        cur_frame = cv2.resize(cur_frame, (0, 0), fx = downscale_ratio, fy = downscale_ratio)
         
         timestamp = float(frame.pts * stream.time_base)
         pbar.set_description("Skipping {} frames. Timestamp: {}".format(frames_to_skip, timestamp))
         
         write_path = 'frames/' + str(image_idx).zfill(8) + '.jpg'
         f.write(str(timestamp) + '\t' + write_path + '\n')
+        
         cv2.imwrite(root + write_path, cur_frame)
         # cv2.imshow('Optical Flow', cv2.resize(cur_frame, (0, 0), fx = 0.5, fy = 0.5))
         image_idx += 1
+        # if image_idx > 100:
+        #     f.close()
+        #     exit()
         if timestamp > 180:
             break
         if cv2.waitKey(1) == ord('q'):  
             break
-f.close()
