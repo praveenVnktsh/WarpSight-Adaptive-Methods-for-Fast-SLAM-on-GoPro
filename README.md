@@ -40,7 +40,10 @@ xhost +local:root &&  sudo docker run --privileged --name orb-3-container \
 <!-- EUROC -->
 ./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt /dpds/storage/GX010040/monocular_EuRoC.yaml /dpds/storage/GX010040/ /dpds/storage/GX010040/timestamps/60fps.txt
 
-cp CameraTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/CameraTrajectories/M60FPS.txt && cp KeyFrameTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/KeyframeTrajectories/M60FPS.txt
+cp CameraTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/CameraTrajectories/optical_flow.txt && cp KeyFrameTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/KeyframeTrajectories/optical_flow.txt
+
+./Monocular-Inertial/mono_inertial_euroc ../Vocabulary/ORBvoc.txt /dpds/storage/GX010040/mono_inertial_EuRoC.yaml /dpds/storage/GX010040/ /dpds/storage/GX010040/timestamps/30fps.txt
+
 
 ## Overall Procedure
 

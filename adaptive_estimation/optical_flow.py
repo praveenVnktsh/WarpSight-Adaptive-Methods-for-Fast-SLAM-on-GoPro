@@ -7,7 +7,7 @@ import os
 feature_params = dict(maxCorners=100, qualityLevel=0.3, minDistance=7, blockSize=7)
 lk_params = dict(winSize=(15, 15), maxLevel=2, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
 
-root = '/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010035/'
+root = '/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/'
 f = open(root + 'optical_flow.txt', 'w')
 
 frames_to_skip = 0
@@ -16,7 +16,7 @@ prev_frame = None
 
 image_idx = 0
 image_idx = 0
-paths = list(sorted(glob.glob('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010035/mav0/cam0/data/*.png')))
+paths = list(sorted(glob.glob('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/mav0/cam0/data/*.png')))
 pbar = tqdm(enumerate(paths), total = len(paths))
 for image_idx, filename in pbar:
     

@@ -2,14 +2,14 @@ import numpy as np
 
 
 
-with open('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010035/optical_flow.txt', 'r') as f:
+with open('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/optical_flow.txt', 'r') as f:
 
     
 
     data = f.readlines()
 
 num_frames = len(data)
-f = open('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010035/timestamps/timestamps_optical_flow.txt', 'w')
+f = open('/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/timestamps/timestamps_optical_flow.txt', 'w')
 
 ts = []
 disps = []
