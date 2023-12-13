@@ -130,9 +130,14 @@ def update(image, imu_df, out_file):
 
 def main():
     # Path configurations (Data needs to be in EuRoC format)
-    images_path = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/mav0/cam0/data'
-    imu_path = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/mav0/imu0/data.csv'
-    timestamps_out = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/timestamps/timestamps_imu_1.txt'
+    # images_path = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/mav0/cam0/data'
+    # imu_path = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/mav0/imu0/data.csv'
+    # timestamps_out = '/mnt/shared/dev/SLAMProject/src/gopro_ws/src/gopro_ros/data/GX010035/timestamps/timestamps_imu_1.txt'
+
+    images_path = '/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/mav0/cam0/data'
+    imu_path = '/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/mav0/imu0/data.csv'
+    timestamps_out = '/home/praveen/dev/slam/warpsight/ORBSLAM_container/GX010040/timestamps/timestamps_imu_1.txt'
+    
 
     # Get image filenames and IMU data
     images = [file for file in os.listdir(images_path) if file.lower().endswith(".png")]
