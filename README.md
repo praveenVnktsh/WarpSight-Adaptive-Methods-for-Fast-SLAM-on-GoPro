@@ -10,7 +10,7 @@ xhost + && docker run -it \
 --ipc=host --net=host --privileged \
 -e DISPLAY=unix$DISPLAY \
 -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
--v /home/praveenvnktsh/dev/slam_proj/warpsight/ORBSLAM_container:/home/storage/ \
+-v /home/praveen/dev/slam/warpsight/ORBSLAM_container:/home/storage/ \
 -e NVIDIA_DRIVER_CAPABILITIES=all \
 praveenvnktsh001/warpsight:update /bin/bash
 
@@ -25,16 +25,22 @@ praveenvnktsh001/warpsight:update /bin/bash
 https://hub.docker.com/r/lmwafer/orb-slam-3-ready
 
 ```
-xhost +local:root && docker run --privileged --name orb-3-container \
+xhost +local:root &&  sudo docker run --privileged --name orb-3-container \
 --rm -p 8087:8087 -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 \
 -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev:/dev:ro \
--v /home/praveenvnktsh/dev/slam_proj/warpsight/ORBSLAM_container:/dpds/storage/ \
---gpus all -it lmwafer/orb-slam-3-ready:1.0-ubuntu18.04
+-v /home/praveen/dev/slam/warpsight/ORBSLAM_container:/dpds/storage/ \
+-it lmwafer/orb-slam-3-ready:1.0-ubuntu18.04 
 ```
 
 ```
 ./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txt /dpds/storage/schenley.yaml /dpds/storage/data/schenley_p1
 ```
+
+
+<!-- EUROC -->
+./Monocular/mono_euroc ../Vocabulary/ORBvoc.txt /dpds/storage/GX010040/monocular_EuRoC.yaml /dpds/storage/GX010040/ /dpds/storage/GX010040/timestamps/60fps.txt
+
+cp CameraTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/CameraTrajectories/M60FPS.txt && cp KeyFrameTrajectory.txt /dpds/storage/GX010040/Results/Trajectories/KeyframeTrajectories/M60FPS.txt
 
 ## Overall Procedure
 
