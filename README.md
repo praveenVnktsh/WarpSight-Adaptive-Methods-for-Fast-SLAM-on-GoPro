@@ -1,3 +1,6 @@
+For an elaborate description of this work, kindly view the PDF uploaded to the root directory of this repository.
+
+
 ## Overall Procedure
 
 This procedure outlines the steps to process recorded MP4s, obtain IMU intrinsics, calibrate the system, and run ORB-SLAM3.
